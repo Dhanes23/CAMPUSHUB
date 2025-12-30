@@ -3,7 +3,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'landing_page.dart';
 
 class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+  final String name;
+  final String role;
+
+  const HomePage({super.key, required this.name, required this.role});
 
   @override
   Widget build(BuildContext context) {
@@ -46,11 +49,52 @@ class HomePage extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               Text(
-                user?.email ?? 'User',
+                name,
                 style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.w500,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
                   color: Colors.blue,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                user?.email ?? '',
+                style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+              ),
+              const SizedBox(height: 16),
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
+                decoration: BoxDecoration(
+                  color: role == 'admin' ? Colors.red[50] : Colors.blue[50],
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: role == 'admin' ? Colors.red : Colors.blue,
+                    width: 1.5,
+                  ),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      role == 'admin'
+                          ? Icons.admin_panel_settings
+                          : Icons.person,
+                      size: 18,
+                      color: role == 'admin' ? Colors.red : Colors.blue,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      role == 'admin' ? 'Admin' : 'User',
+                      style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.bold,
+                        color: role == 'admin' ? Colors.red : Colors.blue,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],

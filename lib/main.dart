@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
-import 'pages/landing_page.dart';
+import 'pages/login_page.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,7 +18,7 @@ class CampusHubApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'CampusHub',
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: const LandingPage(),
+      home: const LoginPage(),
     );
   }
 }
