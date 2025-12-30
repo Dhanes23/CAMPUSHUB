@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "122059133570",
+    "firebase_url": "https://campushub-5e931-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "campushub-5e931",
+    "storage_bucket": "campushub-5e931.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:122059133570:android:4c4ca7a79d66ddd6cb9a9b",
+        "android_client_info": {
+          "package_name": "com.example.campushub_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDdM5KBM5MhPoVA1NhQv2R76WXB55tElos"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
