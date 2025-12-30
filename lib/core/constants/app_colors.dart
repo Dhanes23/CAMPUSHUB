@@ -1,21 +1,54 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  // Primary Blues
-  static const Color primary = Color(0xFF1E88E5); // Blue 600
-  static const Color primaryDark = Color(0xFF1565C0); // Blue 800
-  static const Color primaryLight = Color(0xFF64B5F6); // Blue 300
+  // Primary Colors
+  static const Color primary = Color(0xFF2196F3);
+  static const Color primaryLight = Color(0xFF64B5F6);
+  static const Color primaryDark = Color(0xFF1976D2);
+  static const Color secondary = Color(0xFF03A9F4);
+  static const Color accent = Color(0xFFFF9800);
 
-  // Secondary
-  static const Color secondary = Color(0xFF26A69A); // Teal 400
+  // Background Colors
+  static const Color background = Color(0xFFF5F5F5);
+  static const Color surface = Color(0xFFFFFFFF);
+  static const Color surfaceElevated = Color(0xFFFAFAFA);
 
-  // Backgrounds
-  static const Color background = Color(0xFFF5F7FA); // Light Blue-Grey
-  static const Color surface = Colors.white;
-  static const Color error = Color(0xFFD32F2F); // Red 700
+  // Text Colors
+  static const Color textPrimary = Color(0xFF212121);
+  static const Color textSecondary = Color(0xFF757575);
 
-  // Text
-  static const Color textPrimary = Color(0xFF212121); // Grey 900
-  static const Color textSecondary = Color(0xFF757575); // Grey 600
-  static const Color textLight = Color(0xFFBDBDBD); // Grey 400
+  // Status Colors
+  static const Color success = Color(0xFF4CAF50);
+  static const Color error = Color(0xFFF44336);
+  static const Color warning = Color(0xFFFF9800);
+
+  // Gradient Colors
+  static const LinearGradient primaryGradient = LinearGradient(
+    colors: [Color(0xFF2196F3), Color(0xFF1976D2)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
+  static const LinearGradient accentGradient = LinearGradient(
+    colors: [Color(0xFFFF9800), Color(0xFFF57C00)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
+  static const LinearGradient successGradient = LinearGradient(
+    colors: [Color(0xFF4CAF50), Color(0xFF388E3C)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
+  static const LinearGradient purpleGradient = LinearGradient(
+    colors: [Color(0xFF9C27B0), Color(0xFF7B1FA2)],
+    begin: Alignment.topLeft,
+    end: Alignment.bottomRight,
+  );
+
+  // Shadow Colors
+  static final Color shadowLight = Colors.black.withValues(alpha: 0.1);
+  static final Color shadowMedium = Colors.black.withValues(alpha: 0.15);
+  static final Color shadowDark = Colors.black.withValues(alpha: 0.25);
 }

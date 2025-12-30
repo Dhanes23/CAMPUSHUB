@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import '../../providers/feature_providers.dart';
 import '../../models/academic_info_model.dart';
 import '../../core/constants/app_colors.dart';
+import '../../core/utils/responsive_layout.dart';
 
 class ManageAcademic extends ConsumerWidget {
   const ManageAcademic({super.key});
@@ -43,12 +44,42 @@ class ManageAcademic extends ConsumerWidget {
             );
           }
 
-          return ListView.builder(
-            padding: const EdgeInsets.all(16),
-            itemCount: infoList.length,
-            itemBuilder: (context, index) {
-              final info = infoList[index];
-              return _AcademicInfoCard(info: info);
+          return LayoutBuilder(
+            builder: (context, constraints) {
+              final padding = ResponsiveLayout.getResponsivePadding(context);
+              final columns = ResponsiveLayout.getColumnCount(
+                context,
+                mobile: 1,
+                tablet: 2,
+                desktop: 2,
+              );
+              final isMobile = ResponsiveLayout.isMobile(context);
+
+              return ResponsiveLayout.constrainWidth(
+                child: isMobile
+                    ? ListView.builder(
+                        padding: EdgeInsets.all(padding),
+                        itemCount: infoList.length,
+                        itemBuilder: (context, index) {
+                          final info = infoList[index];
+                          return _AcademicInfoCard(info: info);
+                        },
+                      )
+                    : GridView.builder(
+                        padding: EdgeInsets.all(padding),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: columns,
+                          mainAxisSpacing: 16,
+                          crossAxisSpacing: 16,
+                          childAspectRatio: 2.5,
+                        ),
+                        itemCount: infoList.length,
+                        itemBuilder: (context, index) {
+                          final info = infoList[index];
+                          return _AcademicInfoCard(info: info);
+                        },
+                      ),
+              );
             },
           );
         },

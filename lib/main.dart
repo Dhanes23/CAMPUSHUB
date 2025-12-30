@@ -20,6 +20,8 @@ import 'features/admin/manage_events.dart';
 import 'features/admin/manage_announcements.dart';
 import 'features/admin/manage_academic.dart';
 import 'features/admin/manage_jobs.dart';
+import 'features/admin/manage_students.dart';
+import 'features/admin/student_detail_page.dart';
 import 'features/admin/forms/event_form.dart';
 import 'features/admin/forms/announcement_form.dart';
 import 'features/admin/forms/academic_form.dart';
@@ -171,6 +173,19 @@ final routerProvider = Provider<GoRouter>((ref) {
                 builder: (context, state) {
                   final job = state.extra as JobModel?;
                   return JobFormPage(job: job);
+                },
+              ),
+            ],
+          ),
+          GoRoute(
+            path: 'students',
+            builder: (context, state) => const ManageStudents(),
+            routes: [
+              GoRoute(
+                path: ':id',
+                builder: (context, state) {
+                  final id = state.pathParameters['id']!;
+                  return StudentDetailPage(studentId: id);
                 },
               ),
             ],

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import '../../providers/feature_providers.dart';
 import '../../models/announcement_model.dart';
+import '../../core/utils/responsive_layout.dart';
 
 class ManageAnnouncements extends ConsumerWidget {
   const ManageAnnouncements({super.key});
@@ -42,12 +43,42 @@ class ManageAnnouncements extends ConsumerWidget {
             );
           }
 
-          return ListView.builder(
-            padding: const EdgeInsets.all(16),
-            itemCount: announcements.length,
-            itemBuilder: (context, index) {
-              final announcement = announcements[index];
-              return _AnnouncementCard(announcement: announcement);
+          return LayoutBuilder(
+            builder: (context, constraints) {
+              final padding = ResponsiveLayout.getResponsivePadding(context);
+              final columns = ResponsiveLayout.getColumnCount(
+                context,
+                mobile: 1,
+                tablet: 2,
+                desktop: 2,
+              );
+              final isMobile = ResponsiveLayout.isMobile(context);
+
+              return ResponsiveLayout.constrainWidth(
+                child: isMobile
+                    ? ListView.builder(
+                        padding: EdgeInsets.all(padding),
+                        itemCount: announcements.length,
+                        itemBuilder: (context, index) {
+                          final announcement = announcements[index];
+                          return _AnnouncementCard(announcement: announcement);
+                        },
+                      )
+                    : GridView.builder(
+                        padding: EdgeInsets.all(padding),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: columns,
+                          mainAxisSpacing: 16,
+                          crossAxisSpacing: 16,
+                          childAspectRatio: 2.5,
+                        ),
+                        itemCount: announcements.length,
+                        itemBuilder: (context, index) {
+                          final announcement = announcements[index];
+                          return _AnnouncementCard(announcement: announcement);
+                        },
+                      ),
+              );
             },
           );
         },

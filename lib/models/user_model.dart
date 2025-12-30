@@ -47,4 +47,22 @@ class UserModel {
       'yearOfStudy': yearOfStudy,
     };
   }
+
+  UserModel copyWith({
+    String? name,
+    String? studentId,
+    String? major,
+    int? yearOfStudy,
+  }) {
+    return UserModel(
+      uid: uid,
+      name: name ?? this.name,
+      email: email,
+      role: role,
+      createdAt: createdAt,
+      studentId: studentId ?? this.studentId,
+      major: major ?? this.major,
+      yearOfStudy: yearOfStudy ?? this.yearOfStudy,
+    );
+  }
 }

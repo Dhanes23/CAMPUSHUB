@@ -74,4 +74,24 @@ class AuthService {
       'createdAt': FieldValue.serverTimestamp(),
     });
   }
+
+  // Update user profile
+  Future<void> updateUserProfile(
+    String uid, {
+    String? name,
+    String? studentId,
+    String? major,
+    int? yearOfStudy,
+  }) async {
+    final Map<String, dynamic> updates = {};
+
+    if (name != null) updates['name'] = name;
+    if (studentId != null) updates['studentId'] = studentId;
+    if (major != null) updates['major'] = major;
+    if (yearOfStudy != null) updates['yearOfStudy'] = yearOfStudy;
+
+    if (updates.isNotEmpty) {
+      await _firestore.collection('users').doc(uid).update(updates);
+    }
+  }
 }
