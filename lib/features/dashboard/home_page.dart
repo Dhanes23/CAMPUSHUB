@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'landing_page.dart';
+import '../auth/landing_page.dart';
 
 class HomePage extends StatelessWidget {
   final String name;

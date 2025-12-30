@@ -1,36 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'home_page.dart';
-import 'login_page.dart';
+import 'package:go_router/go_router.dart';
+import 'register_page.dart';
 
-class RegisterPage extends StatefulWidget {
-  const RegisterPage({super.key});
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
 
   @override
-  State<RegisterPage> createState() => _RegisterPageState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
+class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
-  final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _confirmPasswordController = TextEditingController();
   bool _isLoading = false;
   bool _obscurePassword = true;
-  bool _obscureConfirmPassword = true;
 
   @override
   void dispose() {
-    _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
-    _confirmPasswordController.dispose();
     super.dispose();
   }
 
-  Future<void> _register() async {
+  Future<void> _login() async {
     if (!_formKey.currentState!.validate()) {
       return;
     }
@@ -40,44 +35,44 @@ class _RegisterPageState extends State<RegisterPage> {
     });
 
     try {
-      // Create user in Firebase Auth
-      final credential = await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(
-            email: _emailController.text.trim(),
-            password: _passwordController.text,
-          );
+      // Login with Firebase Auth
+      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text,
+      );
 
-      // Save user data to Firestore
-      await FirebaseFirestore.instance
+      // Fetch user data from Firestore
+      final userDoc = await FirebaseFirestore.instance
           .collection('users')
           .doc(credential.user!.uid)
-          .set({
-            'uid': credential.user!.uid,
-            'name': _nameController.text.trim(),
-            'email': _emailController.text.trim(),
-            'role': 'user',
-            'createdAt': FieldValue.serverTimestamp(),
-          });
+          .get();
 
       if (mounted) {
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-            builder: (_) => HomePage(
-              name: _nameController.text.trim(),
-              role: 'user',
-            ),
-          ),
-        );
+        if (userDoc.exists) {
+          final userData = userDoc.data()!;
+          final role = userData['role'] as String?;
+
+          if (role == 'admin') {
+            context.go('/admin');
+          } else {
+            context.go('/dashboard');
+          }
+        } else {
+          // If user data doesn't exist in Firestore, default to dashboard
+          context.go('/dashboard');
+        }
       }
     } on FirebaseAuthException catch (e) {
-      String message = 'Registrasi gagal';
+      String message = 'Login gagal';
 
-      if (e.code == 'weak-password') {
-        message = 'Password terlalu lemah';
-      } else if (e.code == 'email-already-in-use') {
-        message = 'Email sudah terdaftar';
+      if (e.code == 'user-not-found') {
+        message = 'Email tidak terdaftar';
+      } else if (e.code == 'wrong-password') {
+        message = 'Password salah';
       } else if (e.code == 'invalid-email') {
         message = 'Format email tidak valid';
+      } else if (e.code == 'invalid-credential') {
+        message = 'Email atau password salah';
       }
 
       if (mounted) {
@@ -152,10 +147,10 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                   const SizedBox(height: 32),
 
-                  // Register Card
+                  // Login Card
                   Card(
                     elevation: 8,
-                    shadowColor: Colors.black.withOpacity(0.3),
+                    shadowColor: Colors.black.withValues(alpha: 0.3),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(20),
                     ),
@@ -167,7 +162,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
                             const Text(
-                              'Buat Akun Baru',
+                              'Selamat Datang',
                               style: TextStyle(
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,
@@ -176,7 +171,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             ),
                             const SizedBox(height: 8),
                             Text(
-                              'Daftar untuk mengakses CampusHub',
+                              'Silakan login untuk melanjutkan',
                               textAlign: TextAlign.center,
                               style: TextStyle(
                                 color: Colors.grey[600],
@@ -184,28 +179,6 @@ class _RegisterPageState extends State<RegisterPage> {
                               ),
                             ),
                             const SizedBox(height: 24),
-
-                            // Name Field
-                            TextFormField(
-                              controller: _nameController,
-                              textCapitalization: TextCapitalization.words,
-                              decoration: InputDecoration(
-                                labelText: 'Nama Lengkap',
-                                prefixIcon: const Icon(Icons.person_outline),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                filled: true,
-                                fillColor: Colors.grey[50],
-                              ),
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Nama tidak boleh kosong';
-                                }
-                                return null;
-                              },
-                            ),
-                            const SizedBox(height: 16),
 
                             // Email Field
                             TextFormField(
@@ -238,7 +211,7 @@ class _RegisterPageState extends State<RegisterPage> {
                               obscureText: _obscurePassword,
                               decoration: InputDecoration(
                                 labelText: 'Password',
-                                prefixIcon: const Icon(Icons.lock_outlined),
+                                prefixIcon: const Icon(Icons.lock_outline),
                                 suffixIcon: IconButton(
                                   icon: Icon(
                                     _obscurePassword
@@ -261,53 +234,12 @@ class _RegisterPageState extends State<RegisterPage> {
                                 if (value == null || value.isEmpty) {
                                   return 'Password tidak boleh kosong';
                                 }
-                                if (value.length < 6) {
-                                  return 'Password minimal 6 karakter';
-                                }
-                                return null;
-                              },
-                            ),
-                            const SizedBox(height: 16),
-
-                            // Confirm Password Field
-                            TextFormField(
-                              controller: _confirmPasswordController,
-                              obscureText: _obscureConfirmPassword,
-                              decoration: InputDecoration(
-                                labelText: 'Konfirmasi Password',
-                                prefixIcon: const Icon(Icons.lock_outlined),
-                                suffixIcon: IconButton(
-                                  icon: Icon(
-                                    _obscureConfirmPassword
-                                        ? Icons.visibility_outlined
-                                        : Icons.visibility_off_outlined,
-                                  ),
-                                  onPressed: () {
-                                    setState(() {
-                                      _obscureConfirmPassword =
-                                          !_obscureConfirmPassword;
-                                    });
-                                  },
-                                ),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                filled: true,
-                                fillColor: Colors.grey[50],
-                              ),
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Konfirmasi password tidak boleh kosong';
-                                }
-                                if (value != _passwordController.text) {
-                                  return 'Password tidak sama';
-                                }
                                 return null;
                               },
                             ),
                             const SizedBox(height: 24),
 
-                            // Register Button
+                            // Login Button
                             SizedBox(
                               height: 50,
                               child: ElevatedButton(
@@ -319,7 +251,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                 ),
-                                onPressed: _isLoading ? null : _register,
+                                onPressed: _isLoading ? null : _login,
                                 child: _isLoading
                                     ? const SizedBox(
                                         height: 20,
@@ -333,7 +265,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                         ),
                                       )
                                     : const Text(
-                                        'Register',
+                                        'Login',
                                         style: TextStyle(
                                           fontSize: 16,
                                           fontWeight: FontWeight.bold,
@@ -344,12 +276,12 @@ class _RegisterPageState extends State<RegisterPage> {
 
                             const SizedBox(height: 16),
 
-                            // Login Link
+                            // Register Link
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                  'Sudah punya akun? ',
+                                  'Belum punya akun? ',
                                   style: TextStyle(color: Colors.grey[600]),
                                 ),
                                 TextButton(
@@ -357,12 +289,12 @@ class _RegisterPageState extends State<RegisterPage> {
                                     Navigator.pushReplacement(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (_) => const LoginPage(),
+                                        builder: (_) => const RegisterPage(),
                                       ),
                                     );
                                   },
                                   child: const Text(
-                                    'Login',
+                                    'Register',
                                     style: TextStyle(
                                       fontWeight: FontWeight.bold,
                                     ),
