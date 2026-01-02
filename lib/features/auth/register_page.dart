@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../dashboard/home_page.dart';
-import 'login_page.dart';
+import 'package:go_router/go_router.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -60,14 +59,8 @@ class _RegisterPageState extends State<RegisterPage> {
           });
 
       if (mounted) {
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-            builder: (_) => HomePage(
-              name: _nameController.text.trim(),
-              role: 'user',
-            ),
-          ),
-        );
+        // Navigate to dashboard after successful registration
+        context.go('/dashboard');
       }
     } on FirebaseAuthException catch (e) {
       String message = 'Registrasi gagal';
@@ -354,12 +347,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                 ),
                                 TextButton(
                                   onPressed: () {
-                                    Navigator.pushReplacement(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (_) => const LoginPage(),
-                                      ),
-                                    );
+                                    context.go('/login');
                                   },
                                   child: const Text(
                                     'Login',

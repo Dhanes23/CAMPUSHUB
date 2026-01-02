@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../../providers/auth_provider.dart';
 import '../../core/constants/app_colors.dart';
-import 'edit_profile_page.dart';
 
 class ProfilePage extends ConsumerWidget {
   const ProfilePage({super.key});
@@ -28,11 +28,9 @@ class ProfilePage extends ConsumerWidget {
                   // Edit Button
                   IconButton(
                     onPressed: () async {
-                      final result = await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => EditProfilePage(user: user),
-                        ),
+                      final result = await context.push(
+                        '/profile/edit',
+                        extra: user,
                       );
                       // Refresh if profile was updated
                       if (result == true) {

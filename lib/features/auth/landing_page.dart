@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'login_page.dart';
-import 'register_page.dart';
+import 'package:go_router/go_router.dart';
 
 class LandingPage extends StatelessWidget {
   const LandingPage({super.key});
@@ -22,10 +21,7 @@ class LandingPage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Image.asset(
-                'assets/images/campushubfix.png',
-                width: 120,
-              ),
+              Image.asset('assets/images/campushubfix.png', width: 120),
               const SizedBox(height: 20),
               const Text(
                 'CampusHub',
@@ -54,10 +50,7 @@ class LandingPage extends StatelessWidget {
                     ),
                   ),
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => const LoginPage()),
-                    );
+                    context.go('/login');
                   },
                   child: const Text('Login'),
                 ),
@@ -77,10 +70,7 @@ class LandingPage extends StatelessWidget {
                     ),
                   ),
                   onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => const RegisterPage()),
-                    );
+                    context.go('/register');
                   },
                   child: const Text('Register'),
                 ),

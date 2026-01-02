@@ -15,6 +15,7 @@ import 'features/announcements/announcements_page.dart';
 import 'features/academic/academic_info_page.dart';
 import 'features/jobs/jobs_list_page.dart';
 import 'features/profile/profile_page.dart';
+import 'features/profile/edit_profile_page.dart';
 import 'features/admin/admin_dashboard.dart';
 import 'features/admin/manage_events.dart';
 import 'features/admin/manage_announcements.dart';
@@ -103,6 +104,15 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/profile',
         builder: (context, state) => const ProfilePage(),
+        routes: [
+          GoRoute(
+            path: 'edit',
+            builder: (context, state) {
+              final user = state.extra as dynamic;
+              return EditProfilePage(user: user);
+            },
+          ),
+        ],
       ),
       // Admin Routes
       GoRoute(
