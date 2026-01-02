@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../auth/landing_page.dart';
+import 'package:go_router/go_router.dart';
 
 class HomePage extends StatelessWidget {
   final String name;
@@ -21,10 +21,7 @@ class HomePage extends StatelessWidget {
             onPressed: () async {
               await FirebaseAuth.instance.signOut();
               if (context.mounted) {
-                Navigator.of(context).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (_) => const LandingPage()),
-                  (route) => false,
-                );
+                context.go('/login');
               }
             },
           ),
